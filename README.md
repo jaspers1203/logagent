@@ -260,6 +260,19 @@
 4. 主函数调用，初始化读取配置文件，按配置文件代理类型及上游接收类型，生成具体日志代理对象
 
 
+    package main
+    
+    import (
+        "gopkg.in/yaml.v2"
+        "log"
+        logagent "logagent/agent"
+        "logagent/conf"
+        "os"
+        "os/signal"
+        "sync"
+        "syscall"
+    )
+
     var cfg *conf.AppConfig
     
     func init() {
