@@ -255,3 +255,46 @@
             }
 
         }
+
+
+4. 主函数调用，初始化读取配置文件，按配置文件代理类型及上游接收类型，生成具体日志代理对象
+
+
+    var cfg *conf.AppConfig
+    
+    func init() {
+        cfg = &conf.AppConfig{}
+        err := cfg.LoadConfig()
+        if err != nil {
+            os.Exit(-1)
+        }
+    }
+
+    func main() {
+        var wg sync.WaitGroup
+        var agent logagent.LogAgentInterface
+    
+        switch cfg.AgentConfig.Source.Name {
+        case "FILE":
+            agent = logagent.NewFileAgent(cfg)
+            break
+        case "TCP":
+            break
+        case "...":
+            break
+        }
+    
+        //监控退出程序信号
+        wg.Add(1)
+        s := make(chan os.Signal, 1)
+        signal.Notify(s, os.Interrupt, os.Kill, syscall.SIGINT, syscall.SIGTERM)
+        go func() {
+            for {
+                <-s
+                log.Println("log agent terminated")
+                wg.Done()
+            }
+        }()
+    
+        wg.Wait()
+    }

@@ -33,8 +33,18 @@ func init() {
 
 func main() {
 	var wg sync.WaitGroup
+	var agent logagent.LogAgentInterface
 
-	agent := logagent.NewFileAgent(cfg)
+	switch cfg.AgentConfig.Source.Name {
+	case "FILE":
+		agent = logagent.NewFileAgent(cfg)
+		break
+	case "TCP":
+		break
+	case "...":
+		break
+	}
+
 	agent.Run()
 
 	//监控退出程序信号
