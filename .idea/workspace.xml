@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="30ed046e-a711-49f5-9990-acef3ad94874" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/agent/file.go" beforeDir="false" afterPath="$PROJECT_DIR$/agent/file.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -41,14 +39,14 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="go" value="3587" />
-          <entry key="md" value="558" />
+          <entry key="md" value="575" />
           <entry key="yml" value="283" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="Go" value="3587" />
-          <entry key="Markdown" value="66" />
+          <entry key="Markdown" value="83" />
           <entry key="PLAIN_TEXT" value="492" />
           <entry key="YAML" value="283" />
         </counts>
@@ -88,8 +86,8 @@
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="800">
-                <caret line="217" column="14" lean-forward="true" selection-start-line="217" selection-start-column="14" selection-end-line="217" selection-end-column="14" />
+              <first_editor relative-caret-position="3960">
+                <caret line="198" column="4" selection-start-line="198" selection-start-column="4" selection-end-line="198" selection-end-column="4" />
               </first_editor>
               <second_editor />
             </state>
@@ -135,8 +133,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/agent/iagent.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="320">
-              <caret line="16" selection-start-line="16" selection-end-line="16" />
+            <state relative-caret-position="335">
+              <caret line="17" selection-start-line="17" selection-end-line="20" selection-end-column="1" />
             </state>
           </provider>
         </entry>
@@ -444,13 +442,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/agent/iagent.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="320">
-          <caret line="16" selection-start-line="16" selection-end-line="16" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/agent/target/itarget.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="140">
@@ -472,11 +463,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/agent/iagent.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="335">
+          <caret line="17" selection-start-line="17" selection-end-line="20" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
-          <first_editor relative-caret-position="800">
-            <caret line="217" column="14" lean-forward="true" selection-start-line="217" selection-start-column="14" selection-end-line="217" selection-end-column="14" />
+          <first_editor relative-caret-position="3960">
+            <caret line="198" column="4" selection-start-line="198" selection-start-column="4" selection-end-line="198" selection-end-column="4" />
           </first_editor>
           <second_editor />
         </state>

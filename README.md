@@ -23,6 +23,12 @@
 
 2. 定义LogAgentInterface接口，具体实例实现Run()函数
 
+
+    //定义日志代理接口    
+    type LogAgentInterface interface {
+        Run()
+    }
+
     2.1 FILE模式：
     
         //文件类日志代理器
@@ -190,6 +196,7 @@
 3. 定义LogTargetInterface接口，具体发送者实现SendMessage()函数，日志代理对象与发送对象桥接
 
     3.1 KAFKA模式，NewKafkaTargetAgent函数创建异步Producer；
+    
 
         type KafkaTarget struct {
             producer sarama.AsyncProducer
