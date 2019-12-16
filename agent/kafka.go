@@ -9,3 +9,20 @@
  */
 
 package agent
+
+import "logagent/conf"
+
+type KafkaAgent struct {
+	cfgFile *conf.AppConfig
+}
+
+func NewKafkaAgent(cfg *conf.AppConfig) LogAgentInterface {
+
+	return &KafkaAgent{
+		cfgFile: cfg,
+	}
+}
+
+func (ka *KafkaAgent) Run() {
+
+}

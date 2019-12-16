@@ -9,3 +9,20 @@
  */
 
 package agent
+
+import "logagent/conf"
+
+type TCPAgent struct {
+	cfgFile *conf.AppConfig
+}
+
+func NewTCPAgent(cfg *conf.AppConfig) LogAgentInterface{
+
+	return &TCPAgent{
+		cfgFile:cfg,
+	}
+}
+
+func (ta *TCPAgent) Run(){
+
+}
