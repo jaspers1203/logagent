@@ -117,7 +117,7 @@
         }
 
         //执行日志文件读取，为每个实际文件创建文件处理对象，含tail抓取器及Sender类型
-        func (fm *fileMgr) dispatch(targetType string) {
+        func (fm *fileMgr) dispatch(cfg *conf.AppConfig) {
         	//另起协程生成日志文件抓取对象
         	go func() {
         		for {
@@ -135,15 +135,15 @@
         					continue
         				}
         				var sender target.LogTargetInterface
-        				switch targetType {
+        				switch cfg.AgentConfig.Target.Name {
         				case ES:
         					sender = target.NewESTargetAgent()
         					break
         				case KAFKA:
-        					sender = target.NewKafkaTargetAgent()
+        					sender = target.NewKafkaTargetAgent(cfg.AgentConfig.Target.Host,cfg.AgentConfig.Target.Topic)
         					break
         				}
-
+        
         				if sender == nil {
         					log.Printf("invalid target sender instance")
         					continue
@@ -154,13 +154,13 @@
         					tail:     tail,
         					sender:   sender,
         				}
-
+        
         				fm.fileObjChan <- fileObj
         				break
         			}
         		}
         	}()
-
+        
         	//执行日志读取
         	go func() {
         		for true {
