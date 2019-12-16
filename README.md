@@ -22,7 +22,67 @@
         index:
         
 
-2. 定义LogAgentInterface接口，具体实例实现Run()函数
+2. 主函数调用，初始化读取配置文件，按配置文件代理类型及上游接收类型，生成具体日志代理对象.
+
+
+    package main
+    
+    import (
+        "gopkg.in/yaml.v2"
+        "log"
+        logagent "logagent/agent"
+        "logagent/conf"
+        "os"
+        "os/signal"
+        "sync"
+        "syscall"
+    )
+
+    var cfg *conf.AppConfig
+    
+    func init() {
+        cfg = &conf.AppConfig{}
+        err := cfg.LoadConfig()
+        if err != nil {
+            os.Exit(-1)
+        }
+    }
+
+    func main() {
+        var wg sync.WaitGroup
+        var agent logagent.LogAgentInterface
+    
+        switch cfg.AgentConfig.Source.Name {
+        case "FILE":
+            agent = logagent.NewFileAgent(cfg)
+            break
+        case "TCP":
+            agent = logagent.NewTCPAgent(cfg)
+            break
+        case "KAFKA":
+            agent = logagent.NewKafkaAgent(cfg)
+            break
+        case "...":
+            break
+        }
+    
+        //监控退出程序信号
+        wg.Add(1)
+        s := make(chan os.Signal, 1)
+        signal.Notify(s, os.Interrupt, os.Kill, syscall.SIGINT, syscall.SIGTERM)
+        go func() {
+            for {
+                <-s
+                log.Println("log agent terminated")
+                wg.Done()
+            }
+        }()
+    
+        wg.Wait()
+    }
+    
+    
+3. 定义LogAgentInterface接口，具体实例实现Run()函数
 
 
     //定义日志代理接口    
@@ -30,7 +90,7 @@
         Run()
     }
 
-    2.1 FILE模式：
+    3.1 FILE模式：
     
         //文件类日志代理器
         type FileAgent struct {
@@ -192,9 +252,9 @@
         	}
         }
 
-    2.2 TCP模式：
+    3.2 TCP模式：
 
-3. 定义LogTargetInterface接口，具体发送者实现SendMessage()函数，日志代理对象与发送对象桥接
+4. 定义LogTargetInterface接口，具体发送者实现SendMessage()函数，日志代理对象与发送对象桥接
     
     
     //上游发送实现接口
@@ -202,7 +262,7 @@
         SendMessage(msg interface{})
     }
     
-    3.1 KAFKA模式，NewKafkaTargetAgent函数创建异步Producer；    
+    4.1 KAFKA模式，NewKafkaTargetAgent函数创建异步Producer；    
 
         type KafkaTarget struct {
             producer sarama.AsyncProducer
@@ -259,64 +319,7 @@
 
 
 
-4. 主函数调用，初始化读取配置文件，按配置文件代理类型及上游接收类型，生成具体日志代理对象.
 
-
-    package main
-    
-    import (
-        "gopkg.in/yaml.v2"
-        "log"
-        logagent "logagent/agent"
-        "logagent/conf"
-        "os"
-        "os/signal"
-        "sync"
-        "syscall"
-    )
-
-    var cfg *conf.AppConfig
-    
-    func init() {
-        cfg = &conf.AppConfig{}
-        err := cfg.LoadConfig()
-        if err != nil {
-            os.Exit(-1)
-        }
-    }
-
-    func main() {
-        var wg sync.WaitGroup
-        var agent logagent.LogAgentInterface
-    
-        switch cfg.AgentConfig.Source.Name {
-        case "FILE":
-            agent = logagent.NewFileAgent(cfg)
-            break
-        case "TCP":
-            agent = logagent.NewTCPAgent(cfg)
-            break
-        case "KAFKA":
-            agent = logagent.NewKafkaAgent(cfg)
-            break
-        case "...":
-            break
-        }
-    
-        //监控退出程序信号
-        wg.Add(1)
-        s := make(chan os.Signal, 1)
-        signal.Notify(s, os.Interrupt, os.Kill, syscall.SIGINT, syscall.SIGTERM)
-        go func() {
-            for {
-                <-s
-                log.Println("log agent terminated")
-                wg.Done()
-            }
-        }()
-    
-        wg.Wait()
-    }
     
     
 5. others
