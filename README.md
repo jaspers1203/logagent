@@ -294,6 +294,10 @@
             agent = logagent.NewFileAgent(cfg)
             break
         case "TCP":
+            agent = logagent.NewTCPAgent(cfg)
+            break
+        case "KAFKA":
+            agent = logagent.NewKafkaAgent(cfg)
             break
         case "...":
             break
