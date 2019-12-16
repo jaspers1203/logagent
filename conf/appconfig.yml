@@ -10,4 +10,4 @@ agentConfig:
   target:
     name: KAFKA
     host: 192.168.128.136:9092
-    index:
+    topic:
