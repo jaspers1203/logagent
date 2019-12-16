@@ -194,9 +194,14 @@
     2.2 TCP模式：
 
 3. 定义LogTargetInterface接口，具体发送者实现SendMessage()函数，日志代理对象与发送对象桥接
-
-    3.1 KAFKA模式，NewKafkaTargetAgent函数创建异步Producer；
     
+    
+    //上游发送实现接口
+    type LogTargetInterface interface {
+        SendMessage(msg interface{})
+    }
+    
+    3.1 KAFKA模式，NewKafkaTargetAgent函数创建异步Producer；    
 
         type KafkaTarget struct {
             producer sarama.AsyncProducer
