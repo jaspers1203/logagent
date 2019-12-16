@@ -1,9 +1,10 @@
-# logagent
+# README
 
 1. 配置文件说明：
     可以数组形式定义多文件夹，同时收集多文件日志信息；
     支持多种不同数据源及多种上游接收目标，如本例日志数据源为文本文件格式，目标为KAFKA；
     无具体需求，没有对日志行做域映射，以一行字符为基本单位；
+
     logConfig:
       logDir:
         - 'd:\\logs\\info'
@@ -19,8 +20,10 @@
         index:
 
 2. 定义LogAgentInterface接口，具体实例实现Run()函数
+
     2.1 FILE模式：
         生成FILE代理对象，
+
         func NewFileAgent(cfg *conf.AppConfig) LogAgentInterface {
 
         	fa := &FileAgent{
@@ -64,7 +67,7 @@
         	}
         }
 
-        执行日志文件读取，为每个实际文件创建文件处理对象，含tail抓取器及Sender类型
+        //执行日志文件读取，为每个实际文件创建文件处理对象，含tail抓取器及Sender类型
         func (fm *fileMgr) dispatch(targetType string) {
         	//另起协程生成日志文件抓取对象
         	go func() {
@@ -140,8 +143,11 @@
         }
 
     2.2 TCP模式：
-3. 定义LogTargetInterface接口，具体发送者实现SendMessage()函数，日志代理对象与发送对象采用桥接模式
-    3.1 KAFKA模式，NewKafkaTargetAgent函数创建异步Producer，实现接口的SendMessage()函数；
+
+3. 定义LogTargetInterface接口，具体发送者实现SendMessage()函数，日志代理对象与发送对象桥接
+
+    3.1 KAFKA模式，NewKafkaTargetAgent函数创建异步Producer；
+
         type KafkaTarget struct {
             producer sarama.AsyncProducer
             topic    string
