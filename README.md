@@ -1,16 +1,17 @@
 # README
 
 1. 配置文件说明：
-    可以数组形式定义多文件夹，同时收集多文件日志信息；
-    支持多种不同数据源及多种上游接收目标，如本例日志数据源为文本文件格式，目标为KAFKA；
+    可以数组形式定义多文件夹，同时收集多文件日志信息；    
+    支持多种不同数据源及多种上游接收目标，如本例日志数据源为文本文件格式，目标为KAFKA；    
     无具体需求，没有对日志行做域映射，以一行字符为基本单位；
 
-    logConfig:
-      logDir:
+    
+    logConfig:    
+      logDir:     
         - 'd:\\logs\\info'
         - 'd:\\logs\\error'
       logLevel: INFO
-
+      
     agentConfig:
       source:
         name: FILE
@@ -18,18 +19,50 @@
         name: KAFKA
         host: 192.168.128.136:9092
         index:
+        
 
 2. 定义LogAgentInterface接口，具体实例实现Run()函数
 
     2.1 FILE模式：
-        生成FILE代理对象，
-
+    
+        //文件类日志代理器
+        type FileAgent struct {
+            filePath   []string
+            fileMgr    *fileMgr
+            watch      *fsnotify.Watcher
+            cfgFile		*conf.AppConfig
+        }
+        
+        //文件管理器
+        type fileMgr struct {
+            fileChan    chan string
+            fileObjChan chan *fileObj
+            msgChan     chan string
+        }
+        
+        //文件处理对象
+        type fileObj struct {
+            //每个读取日志文件的对象
+            tail     *tail.Tail
+            offset   int64 //记录当前位置
+            filename string
+            sender   target.LogTargetInterface
+        }
+        
+        //代理器实现接口
+        func (fa *FileAgent) Run() {
+        	fa.fileWatch()
+        	fa.fileMgr.dispatch(fa.cfgFile)
+        
+        }
+        
+        生成FILE代理器对象
         func NewFileAgent(cfg *conf.AppConfig) LogAgentInterface {
-
+        
         	fa := &FileAgent{
-        		targetType: cfg.AgentConfig.Target.Name,
+        		cfgFile: cfg,
         		fileMgr: &fileMgr{
-        			fileChan: make(chan string, 200),
+        			fileChan: make(chan string, 1000),
         			msgChan:  make(chan string, 999999),
         		},
         	}
@@ -39,11 +72,21 @@
         		return nil
         	}
         	fa.watch = watch
-
+        
         	for _, p := range cfg.LogConfig.LogDir {
         		fa.filePath = append(fa.filePath, p)
+        		rd, err := ioutil.ReadDir(p)
+        		if err != nil {
+        			continue
+        		}
+        		for _, fi := range rd {
+        			if fi.IsDir() {
+        			} else {
+        				fa.fileMgr.fileChan <- fi.Name()
+        			}
+        		}
         	}
-
+        
         	return fa
         }
 
@@ -172,7 +215,7 @@
                 topic:    topic,
             }
         }
-
+        //实现接口
         func (kfk *KafkaTarget) SendMessage(inMsg interface{}) {
             var (
                 m  string

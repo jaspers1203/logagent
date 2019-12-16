@@ -13,25 +13,27 @@ package agent
 import (
 	"github.com/fsnotify/fsnotify"
 	"github.com/hpcloud/tail"
+	"io/ioutil"
 	"log"
 	"logagent/agent/target"
 	"logagent/conf"
 	"strings"
 )
 
+//文件类日志代理器
 type FileAgent struct {
 	filePath   []string
 	fileMgr    *fileMgr
 	watch      *fsnotify.Watcher
-	targetType string
+	cfgFile		*conf.AppConfig
 }
-
+//文件管理器
 type fileMgr struct {
 	fileChan    chan string
 	fileObjChan chan *fileObj
 	msgChan     chan string
 }
-
+//文件处理对象
 type fileObj struct {
 	//每个读取日志文件的对象
 	tail     *tail.Tail
@@ -43,9 +45,9 @@ type fileObj struct {
 func NewFileAgent(cfg *conf.AppConfig) LogAgentInterface {
 
 	fa := &FileAgent{
-		targetType: cfg.AgentConfig.Target.Name,
+		cfgFile: cfg,
 		fileMgr: &fileMgr{
-			fileChan: make(chan string, 200),
+			fileChan: make(chan string, 1000),
 			msgChan:  make(chan string, 999999),
 		},
 	}
@@ -58,6 +60,16 @@ func NewFileAgent(cfg *conf.AppConfig) LogAgentInterface {
 
 	for _, p := range cfg.LogConfig.LogDir {
 		fa.filePath = append(fa.filePath, p)
+		rd, err := ioutil.ReadDir(p)
+		if err != nil {
+			continue
+		}
+		for _, fi := range rd {
+			if fi.IsDir() {
+			} else {
+				fa.fileMgr.fileChan <- fi.Name()
+			}
+		}
 	}
 
 	return fa
@@ -65,7 +77,7 @@ func NewFileAgent(cfg *conf.AppConfig) LogAgentInterface {
 
 func (fa *FileAgent) Run() {
 	fa.fileWatch()
-	fa.fileMgr.dispatch(fa.targetType)
+	fa.fileMgr.dispatch(fa.cfgFile)
 
 }
 
@@ -89,7 +101,7 @@ func (fa *FileAgent) fileWatch() {
 	}
 }
 
-func (fm *fileMgr) dispatch(targetType string) {
+func (fm *fileMgr) dispatch(cfg *conf.AppConfig) {
 	//另起协程生成日志文件抓取对象
 	go func() {
 		for {
@@ -107,12 +119,12 @@ func (fm *fileMgr) dispatch(targetType string) {
 					continue
 				}
 				var sender target.LogTargetInterface
-				switch targetType {
+				switch cfg.AgentConfig.Target.Name {
 				case ES:
 					sender = target.NewESTargetAgent()
 					break
 				case KAFKA:
-					sender = target.NewKafkaTargetAgent()
+					sender = target.NewKafkaTargetAgent(cfg.AgentConfig.Target.Host,cfg.AgentConfig.Target.Topic)
 					break
 				}
 
