@@ -150,7 +150,7 @@
         	}
         	fa.watch = watch
         
-        	for _, p := range cfg.LogConfig.LogDir {
+        	for _, p := range cfg.AgentConfig.File.LogDir {
         		fa.filePath = append(fa.filePath, p)
         		rd, err := ioutil.ReadDir(p)
         		if err != nil {
