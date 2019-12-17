@@ -5,7 +5,8 @@
     可以数组形式定义多文件夹，同时收集多文件日志信息；    
     支持多种不同数据源及多种上游接收目标，如本例日志数据源为文本文件格式，目标为KAFKA；    
     无具体需求，没有对日志行做域映射，以一行字符为基本单位；
-
+    
+    
     appconfig.yml:
     agentType: FILE #当前代理器类别  FILE/TCP/KAFKA/。。。
     targetType: KAFKA #当前发送器类别  KAFKA/ES/。。。
