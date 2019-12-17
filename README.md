@@ -73,6 +73,8 @@
         case "...":
             break
         }
+        //启动代理器
+        agent.Run()
     
         //监控退出程序信号
         wg.Add(1)
