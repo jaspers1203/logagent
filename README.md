@@ -60,14 +60,14 @@
         var wg sync.WaitGroup
         var agent logagent.LogAgentInterface
     
-        switch cfg.AgentConfig.Source.Name {
-        case "FILE":
+        switch cfg.AgentType {
+        case logagent.AGENT_TYPE_FILE:
             agent = logagent.NewFileAgent(cfg)
             break
-        case "TCP":
+        case logagent.AGENT_TYPE_TCP:
             agent = logagent.NewTCPAgent(cfg)
             break
-        case "KAFKA":
+        case logagent.AGENT_TYPE_KAFKA:
             agent = logagent.NewKafkaAgent(cfg)
             break
         case "...":
@@ -204,14 +204,14 @@
         					continue
         				}
         				var sender target.LogTargetInterface
-        				switch cfg.AgentConfig.Target.Name {
-        				case ES:
-        					sender = target.NewESTargetAgent()
-        					break
-        				case KAFKA:
-        					sender = target.NewKafkaTargetAgent(cfg.AgentConfig.Target.Host,cfg.AgentConfig.Target.Topic)
-        					break
-        				}
+        				switch cfg.TargetType {
+                        case TARGET_TYPE_ES:
+                            sender = target.NewESTargetAgent()
+                            break
+                        case TARGET_TYPE_KAFKA:
+                            sender = target.NewKafkaTargetAgent(cfg.TargetConfig.Kafka.HostAddr,cfg.TargetConfig.Kafka.Topic)
+                            break
+                        }
         
         				if sender == nil {
         					log.Printf("invalid target sender instance")
