@@ -7,6 +7,7 @@
     无具体需求，没有对日志行做域解析，以一行字符为基本单位；
     
     
+        
     YAML格式配置文件appconfig.yml:
     
     agentType: FILE #当前代理器类别  FILE/TCP/KAFKA/。。。
