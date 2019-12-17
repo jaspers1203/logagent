@@ -6,19 +6,26 @@
     支持多种不同数据源及多种上游接收目标，如本例日志数据源为文本文件格式，目标为KAFKA；    
     无具体需求，没有对日志行做域映射，以一行字符为基本单位；
 
+    appconfig.yml:
+    agentType: FILE #当前代理器类别  FILE/TCP/KAFKA/。。。
+    targetType: KAFKA #当前发送器类别  KAFKA/ES/。。。
     
-    logConfig:    
-      logDir:     
-        - 'd:\\logs\\info'
-        - 'd:\\logs\\error'
-      logLevel: INFO
-      
     agentConfig:
-      source:
-        name: FILE
-      target:
-        name: KAFKA
-        host: 192.168.128.136:9092
+      file:
+        logDir:
+          - d:\\logs\\info
+          - d:\\logs\\error
+        logLevel: INFO
+    
+      tcp:
+        hostAddr: 192.168.128.136:7701    
+    
+    targetConfig:
+      kafka:
+        hostAddr: 192.168.128.136:9092
+        topic:
+      es:
+        hostAddr: 192.168.128.136:9200
         index:
         
 
