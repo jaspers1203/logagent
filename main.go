@@ -53,6 +53,11 @@ func main() {
 		break
 	}
 
+	if agent == nil {
+		log.Println("create agent error")
+		os.Exit(-1)
+	}
+
 	agent.Run()
 
 	//监控退出程序信号

@@ -22,30 +22,26 @@ import (
 
 type TCPAgent struct {
 	cfgFile *conf.AppConfig
+}
+
+type TCPPipe struct {
+	conn *net.TCPConn
 	sender  target.LogTargetInterface
 }
 
 func NewTCPAgent(cfg *conf.AppConfig) LogAgentInterface {
-	var sender target.LogTargetInterface
 
-	switch cfg.TargetType {
-	case TARGET_TYPE_KAFKA:
-		host := cfg.TargetConfig.Kafka.HostAddr
-		topic := cfg.TargetConfig.Kafka.Topic
-		sender = target.NewKafkaTargetAgent(host, topic)
-		break
-	case TARGET_TYPE_ES:
-		break
-	}
-
+	//var err error
 	return &TCPAgent{
 		cfgFile: cfg,
-		sender:  sender,
+		//sender:  sender,
 	}
 }
 
 func (ta *TCPAgent) Run() {
 	//var tcpAddr *net.TCPAddr
+	var sender target.LogTargetInterface
+
 	tcpAddr, err := net.ResolveTCPAddr("tcp", ta.cfgFile.AgentConfig.TCP.HostAddr)
 	if err != nil {
 		log.Printf("resolve tcp addr error:%+v\n", err)
@@ -67,25 +63,45 @@ func (ta *TCPAgent) Run() {
 			continue
 		}
 
-		go ta.tcpPipe(tcpConn)
+		switch ta.cfgFile.TargetType {
+		case TARGET_TYPE_KAFKA:
+			host := ta.cfgFile.TargetConfig.Kafka.HostAddr
+			topic := ta.cfgFile.TargetConfig.Kafka.Topic
+			sender = target.NewKafkaTargetAgent(host, topic)
+			break
+		case TARGET_TYPE_ES:
+			break
+		}
+
+		if sender == nil{
+			log.Printf("create sender error\n")
+			continue
+		}
+
+		tp := &TCPPipe{
+			conn:tcpConn,
+			sender:sender,
+		}
+
+		go tp.tcpPipe()
 	}
 
 }
 
 //具体处理连接过程方法
-func (ta *TCPAgent) tcpPipe(conn *net.TCPConn) {
+func (tp *TCPPipe) tcpPipe() {
 	defer func() {
-		log.Printf("connection disconnect %s", conn.RemoteAddr())
-		conn.Close()
+		log.Printf("connection disconnect %s", tp.conn.RemoteAddr())
+		tp.conn.Close()
 	}()
 
-	reader := bufio.NewReader(conn)
+	reader := bufio.NewReader(tp.conn)
 	//循环接收消息并发送
 	for {
 		msg,err:= reader.ReadString('\n')
 		if err!=nil||err==io.EOF{
 			break
 		}
-		ta.sender.SendMessage(msg)
+		tp.sender.SendMessage(msg)
 	}
 }
