@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="30ed046e-a711-49f5-9990-acef3ad94874" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/agent/tcp.go" beforeDir="false" afterPath="$PROJECT_DIR$/agent/tcp.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -41,14 +40,14 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="go" value="5288" />
+          <entry key="go" value="5441" />
           <entry key="md" value="732" />
           <entry key="yml" value="538" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Go" value="5288" />
+          <entry key="Go" value="5441" />
           <entry key="Markdown" value="240" />
           <entry key="PLAIN_TEXT" value="492" />
           <entry key="YAML" value="538" />
@@ -106,8 +105,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/agent/tcp.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="441">
-              <caret line="106" column="1" lean-forward="true" selection-start-line="106" selection-start-column="1" selection-end-line="106" selection-end-column="1" />
+            <state relative-caret-position="261">
+              <caret line="106" column="9" lean-forward="true" selection-start-line="106" selection-start-column="9" selection-end-line="106" selection-end-column="9" />
               <folding>
                 <element signature="e#139#173#0" expanded="true" />
               </folding>
@@ -524,8 +523,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/agent/tcp.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="441">
-          <caret line="106" column="1" lean-forward="true" selection-start-line="106" selection-start-column="1" selection-end-line="106" selection-end-column="1" />
+        <state relative-caret-position="261">
+          <caret line="106" column="9" lean-forward="true" selection-start-line="106" selection-start-column="9" selection-end-line="106" selection-end-column="9" />
           <folding>
             <element signature="e#139#173#0" expanded="true" />
           </folding>

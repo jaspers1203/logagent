@@ -25,8 +25,9 @@ type TCPAgent struct {
 }
 
 type TCPPipe struct {
-	conn   *net.TCPConn
-	sender target.LogTargetInterface
+	conn    *net.TCPConn
+	msgChan chan string
+	sender  target.LogTargetInterface
 }
 
 func NewTCPAgent(cfg *conf.AppConfig) LogAgentInterface {
@@ -79,8 +80,9 @@ func (ta *TCPAgent) Run() {
 		}
 
 		tp := &TCPPipe{
-			conn:   tcpConn,
-			sender: sender,
+			conn:    tcpConn,
+			sender:  sender,
+			msgChan: make(chan string, 999999),
 		}
 
 		go tp.tcpPipe()
@@ -95,13 +97,23 @@ func (tp *TCPPipe) tcpPipe() {
 		tp.conn.Close()
 	}()
 
+	//另起线程处理Channel中已接收消息
+	go func() {
+		for {
+			select {
+			case msg := <-tp.msgChan:
+				tp.sender.SendMessage(msg)
+			}
+		}
+	}()
+
 	reader := bufio.NewReader(tp.conn)
-	//循环接收消息并发送
+	//循环接收消息
 	for {
 		msg, err := reader.ReadString('\n')
 		if err != nil || err == io.EOF {
 			break
 		}
-		tp.sender.SendMessage(msg)
+		tp.msgChan <- msg
 	}
 }
