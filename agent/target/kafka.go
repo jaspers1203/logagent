@@ -19,8 +19,6 @@ import (
 	"time"
 )
 
-var producer sarama.AsyncProducer
-
 func init() {
 
 }
@@ -32,11 +30,15 @@ type KafkaTarget struct {
 
 func NewKafkaTargetAgent(host string, topic string) LogTargetInterface {
 	var err error
+	var producer sarama.AsyncProducer
 
 	config := sarama.NewConfig()
 	config.Producer.RequiredAcks = sarama.WaitForAll
 	config.Producer.Partitioner = sarama.NewRandomPartitioner
 	config.Producer.Return.Successes = true
+
+	//client, _ := sarama.NewClient(strings.Split(host, ","), config)
+	//producer, err = sarama.NewAsyncProducerFromClient(client)
 
 	producer, err = sarama.NewAsyncProducer(strings.Split(host, ","), config)
 	if err != nil {
@@ -67,12 +69,12 @@ func (kfk *KafkaTarget) SendMessage(inMsg interface{}) {
 		Value: sarama.ByteEncoder(value),
 	}
 
-	producer.Input() <- msg
+	kfk.producer.Input() <- msg
 
 	select {
-	case suc := <-producer.Successes():
+	case suc := <-kfk.producer.Successes():
 		fmt.Printf("offset:%v,timestamp:%v\n", suc.Offset, suc.Timestamp.String())
-	case fail := <-producer.Errors():
+	case fail := <-kfk.producer.Errors():
 		fmt.Printf("err: %s\n", fail.Err.Error())
 	}
 
