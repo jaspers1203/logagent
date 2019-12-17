@@ -1,13 +1,21 @@
-logConfig:
-  logDir:
-    - 'd:\\logs\\info'
-    - 'd:\\logs\\error'
-  logLevel: INFO
+agentType: FILE #当前代理器类别  FILE/TCP/KAFKA/。。。
+targetType: KAFKA #当前发送器类别  KAFKA/ES/。。。
 
 agentConfig:
-  source:
-    name: FILE
-  target:
-    name: KAFKA
-    host: 192.168.128.136:9092
+  file:
+    logDir:
+      - d:\\logs\\info
+      - d:\\logs\\error
+    logLevel: INFO
+
+  tcp:
+    hostAddr: 192.168.128.136:7701
+
+
+targetConfig:
+  kafka:
+    hostAddr: 192.168.128.136:9092
     topic:
+  es:
+    hostAddr: 192.168.128.136:9200
+    index:

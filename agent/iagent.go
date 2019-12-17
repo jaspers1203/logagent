@@ -10,10 +10,7 @@
 
 package agent
 
-const (
-	ES    = "ES"
-	KAFKA = "KAFKA"
-)
+
 
 //定义日志代理接口
 type LogAgentInterface interface {

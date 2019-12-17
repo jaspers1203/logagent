@@ -18,28 +18,36 @@ import (
 	"runtime"
 )
 
+//整体配置文件结构体
 type AppConfig struct {
-	LogConfig LogConfig	`yaml:"logConfig"`
-	AgentConfig AgentConfig `yaml:"agentConfig"`
+	AgentType    string       `yaml:"agentType"`
+	TargetType   string       `yaml:"targetType"`
+	AgentConfig  AgentConfig  `yaml:"agentConfig"`
+	TargetConfig TargetConfig `yaml:"targetConfig"`
 }
 
-type LogConfig struct {
-	LogLevel string `yaml:"logLevel"`
-	LogDir   []string `yaml:"logDir,flow"`
-}
-
+//代理器配置
 type AgentConfig struct {
-	Source struct {
-		Name string `yaml:"name"`
-	} `yaml:"source"`
-	Target  struct {
-		Name string `yaml:"name"`
-		Host string `yaml:"host"`
-		Index string `yaml:"index"`
-		Topic string `yaml:"topic"`
-	} `yaml:"target"`
+	File struct {
+		LogLevel string   `yaml:"logLevel"`
+		LogDir   []string `yaml:"logDir,flow"`
+	} `yaml:"file"`
+	TCP struct {
+		HostAddr string `yaml:"hostAddr"`
+	} `yaml:"tcp"`
 }
 
+//发送器配置
+type TargetConfig struct {
+	Kafka struct {
+		HostAddr string `yaml:"hostAddr"`
+		Topic    string `yaml:"topic"`
+	} `yaml:"kafka"`
+	ES struct {
+		HostAddr string `yaml:"hostAddr"`
+		Index    string `yaml:"index"`
+	} `yaml:"es"`
+}
 
 func (c *AppConfig) LoadConfig() error {
 	var filePath string
@@ -52,13 +60,15 @@ func (c *AppConfig) LoadConfig() error {
 	}
 
 	file, err := ioutil.ReadFile(filePath)
-	if err!=nil{
-		fmt.Printf("read config file error:%+v\n",err)
+	if err != nil {
+		fmt.Printf("read config file error:%+v\n", err)
 		return err
 	}
 	err = yaml.Unmarshal(file, c)
-	if err!=nil{
-		fmt.Printf("Unmarshal config file error:%+v\n",err)
+	if err != nil {
+		fmt.Printf("Unmarshal config file error:%+v\n", err)
 		return err
 	}
+
+	return nil
 }

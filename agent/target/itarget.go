@@ -10,6 +10,7 @@
 
 package target
 
+
 //上游发送实现接口
 type LogTargetInterface interface {
 	SendMessage(msg interface{})

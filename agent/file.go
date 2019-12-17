@@ -58,7 +58,7 @@ func NewFileAgent(cfg *conf.AppConfig) LogAgentInterface {
 	}
 	fa.watch = watch
 
-	for _, p := range cfg.LogConfig.LogDir {
+	for _, p := range cfg.AgentConfig.File.LogDir {
 		fa.filePath = append(fa.filePath, p)
 		rd, err := ioutil.ReadDir(p)
 		if err != nil {
@@ -119,12 +119,12 @@ func (fm *fileMgr) dispatch(cfg *conf.AppConfig) {
 					continue
 				}
 				var sender target.LogTargetInterface
-				switch cfg.AgentConfig.Target.Name {
-				case ES:
+				switch cfg.TargetType {
+				case TARGET_TYPE_ES:
 					sender = target.NewESTargetAgent()
 					break
-				case KAFKA:
-					sender = target.NewKafkaTargetAgent(cfg.AgentConfig.Target.Host,cfg.AgentConfig.Target.Topic)
+				case TARGET_TYPE_KAFKA:
+					sender = target.NewKafkaTargetAgent(cfg.TargetConfig.Kafka.HostAddr,cfg.TargetConfig.Kafka.Topic)
 					break
 				}
 

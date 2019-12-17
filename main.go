@@ -32,17 +32,21 @@ func init() {
 }
 
 func main() {
+
+	testCfgFile()
+	return
+
 	var wg sync.WaitGroup
 	var agent logagent.LogAgentInterface
 
-	switch cfg.AgentConfig.Source.Name {
-	case "FILE":
+	switch cfg.AgentType {
+	case logagent.AGENT_TYPE_FILE:
 		agent = logagent.NewFileAgent(cfg)
 		break
-	case "TCP":
+	case logagent.AGENT_TYPE_TCP:
 		agent = logagent.NewTCPAgent(cfg)
 		break
-	case "KAFKA":
+	case logagent.AGENT_TYPE_KAFKA:
 		agent = logagent.NewKafkaAgent(cfg)
 		break
 	case "...":
