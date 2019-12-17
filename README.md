@@ -212,21 +212,21 @@
                             sender = target.NewKafkaTargetAgent(cfg.TargetConfig.Kafka.HostAddr,cfg.TargetConfig.Kafka.Topic)
                             break
                         }
+                                
+                        if sender == nil {
+                            log.Printf("invalid target sender instance")
+                            continue
+                        }
+                        fileObj := &fileObj{
+                            filename: f,
+                            offset:   0,
+                            tail:     tail,
+                            sender:   sender,
+                        }
         
-        				if sender == nil {
-        					log.Printf("invalid target sender instance")
-        					continue
-        				}
-        				fileObj := &fileObj{
-        					filename: f,
-        					offset:   0,
-        					tail:     tail,
-        					sender:   sender,
-        				}
-        
-        				fm.fileObjChan <- fileObj
-        				break
-        			}
+                        fm.fileObjChan <- fileObj
+                        break
+                    }
         		}
         	}()
         
