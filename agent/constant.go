@@ -19,4 +19,6 @@ const (
 const (
 	TARGET_TYPE_KAFKA = "KAFKA"
 	TARGET_TYPE_ES = "ES"
+
+	//TargetTypeES = ""
 )

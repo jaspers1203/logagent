@@ -20,10 +20,12 @@ import (
 	"os"
 )
 
+//TCP日志代理器
 type TCPAgent struct {
 	cfgFile *conf.AppConfig
 }
 
+//每个Socket连接实际处理对象
 type TCPPipe struct {
 	conn    *net.TCPConn
 	msgChan chan string
@@ -39,6 +41,7 @@ func NewTCPAgent(cfg *conf.AppConfig) LogAgentInterface {
 	}
 }
 
+//代理器启动
 func (ta *TCPAgent) Run() {
 	//var tcpAddr *net.TCPAddr
 	var sender target.LogTargetInterface
